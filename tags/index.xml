@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Emma Hastings&#39;s RStudio Blog</title>
+    <link>http://ehastings17.github.io/tags/</link>
+    <description>Recent content in Tags on Emma Hastings&#39;s RStudio Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://ehastings17.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>analysis</title>
+      <link>http://ehastings17.github.io/tags/analysis/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data</title>
+      <link>http://ehastings17.github.io/tags/data/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>NCAA</title>
+      <link>http://ehastings17.github.io/tags/ncaa/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/ncaa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>http://ehastings17.github.io/tags/r/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sports</title>
+      <link>http://ehastings17.github.io/tags/sports/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/sports/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>volleyball</title>
+      <link>http://ehastings17.github.io/tags/volleyball/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/volleyball/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>plot</title>
+      <link>http://ehastings17.github.io/tags/plot/</link>
+      <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/plot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R Markdown</title>
+      <link>http://ehastings17.github.io/tags/r-markdown/</link>
+      <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/r-markdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>regression</title>
+      <link>http://ehastings17.github.io/tags/regression/</link>
+      <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
+      
+      <guid>http://ehastings17.github.io/tags/regression/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
