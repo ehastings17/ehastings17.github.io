@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -59,7 +64,7 @@
 
   <article class="article">
     
-    <span class="article-duration">0 min read</span>
+    <span class="article-duration">12 min read</span>
     
 
     <h1 class="article-title">Explaining the Split - How Nebraska Volleyball Lost to a Team They Beat 24 Hours Before</h1>
@@ -73,6 +78,248 @@
 <script src="http://ehastings17.github.io/2021/03/27/explaining-the-split-how-nebraska-volleyball-lost-to-a-team-they-beat-24-hours-before/index_files/header-attrs/header-attrs.js"></script>
 
 
+<p>There is no doubt that Nebraska is a volleyball school. After three visits to the NCAA Championship in the last 5 years, including 2 national championships in 2015 and 2017, it would be insane to argue against that statement. Unsurprisingly, any team playing the Cornhuskers has to step up their game to compete, let alone to make an attempt at getting a +1 in their win column.</p>
+<p>In mid-March, Ohio State was the next team to face off against Nebraska with two back-to-back games on the 12th and 13th. The Buckeyes were a surprise team in the Big Ten and were walking into Lincoln undefeated. Every fan of Big Ten volleyball knew that this was going to be an insane series - and they were right.</p>
+<p>After the weekend was over, Nebraska and Ohio State had split two five-set thrillers, with Nebraska taking the first game on the 12th, and Ohio State taking the second game on the 13th.</p>
+<p>So, what did it take for Nebraska to beat the only undefeated team left in the Big Ten? What did Ohio State have to do to rebound after the loss and beat one of the best teams in the nation? That’s what I’ll dive into in this blog post.</p>
+<p>First, I’m going to run the necessary libraries for this project - tidyverse, cowplot, waffle, ggrepel, and ggalt. Then, I’ll import two different data sets - one showing individual statistics for each player for each game, and the other showing team statistics from each set of both matches. I found this data on the NCAA’s website here and here, and then I put the data into my own, importable CSV files.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.0.5     ✓ dplyr   1.0.3
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(cowplot)
+library(waffle)
+library(ggrepel)
+library(ggalt)</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;ggalt&#39;:
+##   method                  from   
+##   grid.draw.absoluteGrob  ggplot2
+##   grobHeight.absoluteGrob ggplot2
+##   grobWidth.absoluteGrob  ggplot2
+##   grobX.absoluteGrob      ggplot2
+##   grobY.absoluteGrob      ggplot2</code></pre>
+<pre class="r"><code>indivdata &lt;- read.csv(&quot;indivdata.csv&quot;)
+teamdata &lt;- read.csv(&quot;teamdata.csv&quot;)</code></pre>
+<p>Then, just to make things easier later on, I’m going to split each of my data sets up into two separate data frames by game. I’m going to be comparing the teams’ performances in each game, and now I’ll have the data handy right when I need it.</p>
+<pre class="r"><code>indivgame1 &lt;- indivdata %&gt;% 
+  filter(GAME == 1)
+
+indivgame2 &lt;- indivdata %&gt;% 
+  filter(GAME == 2)
+
+teamgame1 &lt;- teamdata %&gt;% 
+  filter(Game == 1)
+
+teamgame2 &lt;- teamdata %&gt;% 
+  filter(Game == 2)</code></pre>
+<p>I want to figure out what exactly made the difference in these two games. What stat lines will explain Nebraska’s advantage in game one and Ohio State’s in game two?</p>
+<p>Being a volleyball player myself, I think one will be hitting percentage. Hitting percentage tells us how likely a team is to get a kill. So, if a team’s hitting percentage is 35%, they’ll get a kill 35% of the time they get an attacking opportunity.</p>
+<p>Hitting percentage is calculated by subtracting a team’s hitting errors from their kills and dividing that number by the total number of hitting attempts. For all you math people, it looks like this: (kills-hitting errors)/total hitting attempts.</p>
+<p>First, I am going to create a new data set with two new columns that convert the hitting percentages for both Nebraska and Ohio State to percentages. They are currently in decimal form, as that’s how they are usually displayed in volleyball statistics sets.</p>
+<pre class="r"><code>HPgame1 &lt;- teamgame1 %&gt;%
+  mutate(NebPCT = (TeamPCT * 100)) %&gt;%
+  mutate(OSUPCT = (OppPCT * 100))
+
+HPgame2 &lt;- teamgame2 %&gt;%
+  mutate(NebPCT = (TeamPCT * 100)) %&gt;%
+  mutate(OSUPCT = (OppPCT * 100))</code></pre>
+<p>In order to see hitting percentage’s effect on these games, I’m going to make two line charts showing how Nebraska and Ohio State’s hitting percentages compare by set. I’m also adding annotations to the chart to display the exact set-by-set hitting percentages.</p>
+<p>Additionally, I want to be able to tell who won each set just by looking at the chart. However, rather than cluttering up the chart with more words and numbers, I’m going to distinguish the winner of each set with a bigger point and the loser with a smaller point. The outcome of each game will be in the bottom left corner, as well. I’m also going to assign these line charts to the variables “line1” and “line2” for later.</p>
+<p>Here’s the code for the first line chart…</p>
+<pre class="r"><code>line1 &lt;- ggplot() +
+  geom_line(data=HPgame1, aes(x=SET, y=NebPCT), color=&quot;red&quot;) +
+  geom_line(data=HPgame1, aes(x=SET, y=OSUPCT), color=&quot;maroon&quot;) +
+  geom_point(data=HPgame1, aes(x=1, y=20.6), size=2, color=&quot;red&quot;) +
+  geom_point(data=HPgame1, aes(x=1, y=40), size=4, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame1, aes(x=2, y=12.8), size=2, color=&quot;red&quot;) +
+  geom_point(data=HPgame1, aes(x=2, y=22.7), size=4, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame1, aes(x=3, y=25.6), size=4, color=&quot;red&quot;) +
+  geom_point(data=HPgame1, aes(x=3, y=20), size=2, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame1, aes(x=4, y=35.3), size=4, color=&quot;red&quot;) +
+  geom_point(data=HPgame1, aes(x=4, y=5.7), size=2, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame1, aes(x=5, y=41.2), size=4, color=&quot;red&quot;) +
+  geom_point(data=HPgame1, aes(x=5, y=19), size=2, color=&quot;maroon&quot;) +
+  annotate(&quot;text&quot;, x=1.35, y=22, label=&quot;NEB, 20.6%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.35, y=41, label=&quot;OSU, 40.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2.23, y=13, label=&quot;12.8%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2.22, y=23.9, label=&quot;22.7%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.23, y=25.5, label=&quot;25.6%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.24, y=20.5, label=&quot;20.0%&quot;, size=2)  +
+  annotate(&quot;text&quot;, x=4.15, y=33.5, label=&quot;35.3%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=4.2, y=5, label=&quot;5.7%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5, y=39, label=&quot;41.2%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5, y=21.5, label=&quot;19.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.1, y=3, label= &quot;NEB 3-2&quot;, size=2) +
+  labs(title=&quot;Hitting percentage predicts the winner of all 10 series sets.&quot;, subtitle = &quot;During the first game, Nebraska won the hitting percentage battle in 3 out of 5 sets.&quot;, x = &quot;Set&quot;, y=&quot;Hitting Percentage (%)&quot;) +
+  scale_y_continuous(limits = c(0, 55)) +
+  theme_bw() +
+  theme(plot.title = element_text(size = 16, face = &quot;bold&quot;), plot.subtitle = element_text(size = 12), axis.title = element_text(size = 9))</code></pre>
+<p>… and here’s the code for the second.</p>
+<pre class="r"><code>line2 &lt;- ggplot() + 
+  geom_line(data=HPgame2, aes(x=SET, y=NebPCT), color=&quot;red&quot;) +
+  geom_line(data=HPgame2, aes(x=SET, y=OSUPCT), color=&quot;maroon&quot;) +
+  geom_point(data=HPgame2, aes(x=1, y=25.8), size=2, color=&quot;red&quot;) +
+  geom_point(data=HPgame2, aes(x=1, y=48.3), size=4, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame2, aes(x=2, y=18.9), size=4, color=&quot;red&quot;) +
+  geom_point(data=HPgame2, aes(x=2, y=10), size=2, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame2, aes(x=3, y=39.5), size=4, color=&quot;red&quot;) +
+  geom_point(data=HPgame2, aes(x=3, y=29.4), size=2, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame2, aes(x=4, y=8.3), size=2, color=&quot;red&quot;) +
+  geom_point(data=HPgame2, aes(x=4, y=20), size=4, color=&quot;maroon&quot;) +
+  geom_point(data=HPgame2, aes(x=5, y=31.8), size=2, color=&quot;red&quot;) +
+  geom_point(data=HPgame2, aes(x=5, y=47.5), size=4, color=&quot;maroon&quot;) +
+  annotate(&quot;text&quot;, x=1.18, y=28.3, label=&quot;NEB, 25.8%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.25, y=48, label=&quot;OSU, 48.3%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.95, y=22.9, label=&quot;18.9%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2.23, y=10, label=&quot;10.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.2, y=41.5, label=&quot;39.5%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.09, y=26, label=&quot;29.4%&quot;, size=2)  +
+  annotate(&quot;text&quot;, x=4.225, y=8.5, label=&quot;8.3%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.95, y=24.1, label=&quot;20.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5.1, y=28.5, label=&quot;31.8%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5.1, y=45, label=&quot;47.6%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.1, y=3, label= &quot;OSU 3-2&quot;, size=2) +
+  labs(subtitle=&quot;The same thing happens in Game 2, except it&#39;s the Buckeyes&#39; turn.&quot;, x=&quot;Set&quot;, y=&quot;Hitting Percentage (%)&quot;, caption=&quot;Source: NCAA | By Emma Hastings&quot;) +
+  scale_y_continuous(limits = c(0, 55)) +
+  theme_bw() +
+  theme(plot.title = element_text(size = 16, face = &quot;bold&quot;), plot.subtitle = element_text(size = 12), axis.title = element_text(size = 9))</code></pre>
+<p>Finally, I’m going to use “plot_grid()” to put the line charts together. This way, we’ll be able to compare Game 1’s hitting percentages with Game 2’s.</p>
+<pre class="r"><code>plot_grid(line1, line2, ncol = 1)</code></pre>
+<p><img src="http://ehastings17.github.io/2021/03/27/explaining-the-split-how-nebraska-volleyball-lost-to-a-team-they-beat-24-hours-before/index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>After comparing Nebraska and Ohio State’s hitting percentages in both games, we can see that in every single set, the team with the best hitting percentage wins it. This happened 100% of the time in both matches</p>
+<p>Basically, in order for a team to win a set, and therefore win the game, they have to eliminate their hitting errors and capitalize on every opportunity they get to terminate the ball and wrack up more kills. Getting kills might be important, but if you’re committing an insane number of errors, you’re giving your opponent free points that they didn’t even have to work for.</p>
+<p>Speaking of errors, how much of an effect do they actually have on the outcome of the game? Well, as we saw above, hitting errors do make their presence known in the score. However, there are many different kinds of errors: hitting errors, serving errors, serve receive errors, blocking errors, and digging errors. So, why don’t we check out if the error column alone can predict the outcome of a game, as well?</p>
+<p>First, I’m going to isolate Nebraska and Ohio State by game.</p>
+<pre class="r"><code>neindivgame1 &lt;- indivgame1 %&gt;% 
+  filter(TEAM == &quot;NEBRASKA CORNHUSKERS&quot;)
+
+neindivgame2 &lt;- indivgame2 %&gt;% 
+  filter(TEAM == &quot;NEBRASKA CORNHUSKERS&quot;)
+
+osuindivgame1 &lt;- indivgame1 %&gt;% 
+  filter(TEAM == &quot;OHIO STATE BUCKEYES&quot;)
+
+osuindivgame2 &lt;- indivgame2 %&gt;% 
+  filter(TEAM == &quot;OHIO STATE BUCKEYES&quot;)</code></pre>
+<p>Then, I will mutate an “ERRORS” column that adds up the total number of errors committed by each player (besides digging errors, which weren’t included in the stats).</p>
+<pre class="r"><code>neerrorsgame1 &lt;- neindivgame1 %&gt;%
+  group_by(NAME) %&gt;%
+  mutate(ERRORS = sum(E + SE + RE + BE + BHE))
+
+neerrorsgame2 &lt;- neindivgame2 %&gt;%
+  group_by(NAME) %&gt;%
+  mutate(ERRORS = sum(E + SE + RE + BE + BHE))
+
+osuerrorsgame1 &lt;- osuindivgame1 %&gt;%
+  group_by(NAME) %&gt;%
+  mutate(ERRORS = sum(E + SE + RE + BE + BHE))
+
+osuerrorsgame2 &lt;- osuindivgame2 %&gt;%
+  group_by(NAME) %&gt;%
+  mutate(ERRORS = sum(E + SE + RE + BE + BHE))</code></pre>
+<p>Next, I will summarize a “totalerrors” column that adds up the total errors that each team committed for each game.</p>
+<pre class="r"><code>neTEgame1 &lt;- neerrorsgame1 %&gt;%
+  group_by(TEAM) %&gt;% 
+  summarise(totalerrors = sum(ERRORS))
+
+neTEgame2 &lt;- neerrorsgame2 %&gt;%
+  group_by(TEAM) %&gt;% 
+  summarise(totalerrors = sum(ERRORS))
+
+osuTEgame1 &lt;- osuerrorsgame1 %&gt;%
+  group_by(TEAM) %&gt;% 
+  summarise(totalerrors = sum(ERRORS))
+
+osuTEgame2 &lt;- osuerrorsgame2 %&gt;%
+  group_by(TEAM) %&gt;% 
+  summarise(totalerrors = sum(ERRORS))</code></pre>
+<p>Then, I will make vectors for each team containing the number of errors they committed.</p>
+<pre class="r"><code>nuerrorsg1 &lt;- c(&quot;Nebraska&quot; = 34, 13)
+nuerrorsg2 &lt;- c(&quot;Nebraska&quot; = 45)
+osuerrorsg1 &lt;- c(&quot;Ohio State&quot; = 47)
+osuerrorsg2 &lt;- c(&quot;Ohio State&quot; = 34, 11)</code></pre>
+<p>Finally, I’m going to put each data frame into a waffle chart and iron them together to show how Nebraska and Ohio State compare in each game.</p>
+<p>Here is the code for the first iron…</p>
+<pre class="r"><code>g1errors &lt;- iron(waffle(nuerrorsg1, rows = 3, colors = c(&quot;red&quot;, &quot;white&quot;)) + 
+  labs(title = &quot;Nebraska&#39;s Win Attributed to Less Errors&quot;, subtitle = &quot;The Buckeyes had 13 more errors than the Huskers.&quot;) + 
+  theme(plot.title = element_text(size = 16, face = &quot;bold&quot;), plot.subtitle = element_text(size = 12), axis.title.y = element_blank()),
+waffle(osuerrorsg1, rows = 3, xlab=&quot;1 square = 1 error&quot;, colors = c(&quot;maroon&quot;)) + 
+  labs(caption = &quot;Source: NCAA | By Emma Hastings&quot;))</code></pre>
+<p><img src="http://ehastings17.github.io/2021/03/27/explaining-the-split-how-nebraska-volleyball-lost-to-a-team-they-beat-24-hours-before/index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>… and here’s the code for the second.</p>
+<pre class="r"><code>g2errors &lt;- iron(waffle(nuerrorsg2, rows = 3, colors = c(&quot;red&quot;)) + 
+  labs(title = &quot;The Huskers Made the Same Mistake as the Buckeyes in Game 2&quot;, subtitle = &quot;Nebraska had 11 more errors than Ohio State.&quot;) + 
+  theme(plot.title = element_text(size = 15.5, face = &quot;bold&quot;), plot.subtitle = element_text(size = 12), axis.title.y = element_blank()),
+  waffle(osuerrorsg2, rows = 3, xlab=&quot;1 square = 1 error&quot;, colors = c(&quot;maroon&quot;, &quot;white&quot;)) +
+    labs(caption = &quot;Source: NCAA | By Emma Hastings&quot;))</code></pre>
+<p><img src="http://ehastings17.github.io/2021/03/27/explaining-the-split-how-nebraska-volleyball-lost-to-a-team-they-beat-24-hours-before/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>After a single glance at either Game 1 or Game 2, it’s a no-brainer that errors were the losers’ kryptonite here. The winner of each game had significantly fewer errors than the loser. This makes complete sense.</p>
+<p>If hitting percentage and total errors can predict the outcome of a game on their own, imagine the damage they can do together. If a team is just having an off day - can’t get kills, shanking passes, missing blocks left and right - it’s a fair statement to make that they will almost never win. That is, as long as the other team isn’t having an even worse day.</p>
+<p>Last, but not least, I want to do some comparisons with blocking. When a team blocks their opponent’s hits, there is absolutely nothing the other team can do about it. The rally is over, and you’re on your way to the back row to get ready for serve receive. Not to mention, a big block can do a lot for a team’s momentum. So, can blocks predict the outcome of a game, too? Let’s check it out.</p>
+<p>First, I am going to mutate a new column that adds up the total solo blocks and block assists for each player, and then I’ll add this to a new data frame for each game.</p>
+<pre class="r"><code>indivblockg1 &lt;- indivgame1 %&gt;%
+ group_by(NAME) %&gt;%
+  mutate(BLOCKS = sum(BS + BA))
+
+indivblockg2 &lt;- indivgame2 %&gt;%
+ group_by(NAME) %&gt;%
+  mutate(BLOCKS = sum(BS + BA))</code></pre>
+<p>Then, I’m going to add up each individual’s blocks to get a team total for each game, as well, and I will put this information in its own data frame.</p>
+<pre class="r"><code>teamblockg1 &lt;- indivblockg1 %&gt;%
+  group_by(TEAM) %&gt;%
+  summarise(TOTALBLOCKS = sum(BLOCKS))
+
+teamblockg2 &lt;- indivblockg2 %&gt;%
+  group_by(TEAM) %&gt;%
+  summarise(TOTALBLOCKS = sum(BLOCKS))</code></pre>
+<p>Next, I’m going to separate each game out into Nebraska and Ohio State so I can compare their blocking totals later.</p>
+<pre class="r"><code>nublocks1 &lt;- teamblockg1 %&gt;% 
+  filter(TEAM == &quot;Nebraska&quot;)
+
+nublocks2 &lt;- teamblockg2 %&gt;% 
+  filter(TEAM == &quot;Nebraska&quot;)
+
+osublocks1 &lt;- teamblockg1 %&gt;% 
+  filter(TEAM == &quot;Ohio State&quot;)
+
+osublocks2 &lt;- teamblockg2 %&gt;% 
+  filter(TEAM == &quot;Ohio State&quot;)</code></pre>
+<p>Then, I’m going to create two separate bar charts displaying each team’s blocking totals for each game.</p>
+<p>Here’s the code for the first bar chart…</p>
+<pre class="r"><code>blockg1 &lt;- ggplot() + 
+  geom_bar(data=teamblockg1, aes(x=TEAM, weight=`TOTALBLOCKS`)) +
+  geom_bar(data=nublocks1, aes(x=TEAM, weight=`TOTALBLOCKS`, group=TEAM), color=&quot;red&quot;) +
+  geom_bar(data=osublocks1, aes(x=TEAM, weight=`TOTALBLOCKS`, group=TEAM), color=&quot;maroon&quot;) +
+  theme_bw() + 
+  labs(title = &quot;Can You Block Your Opponent?&quot;, subtitle = &quot;Nebraska out-blocked Ohio State by 9 in game 1.&quot;, y=&quot;Blocks&quot;, x=&quot;Team&quot;, caption = &quot;&quot;) +
+  scale_y_continuous(limits = c(0, 21)) +
+  annotate(&quot;text&quot;, x=1, y=17.7, label=&quot;17&quot;, size=4) +
+  annotate(&quot;text&quot;, x=2, y=8.7, label=&quot;8&quot;, size=4) +
+  annotate(&quot;text&quot;, x=0.65, y=21, label=&quot;NEB 3-2&quot;, size=4) +
+  theme(plot.title = element_text(size = 12, face = &quot;bold&quot;), plot.subtitle = element_text(size = 8), axis.title = element_text(size=10))</code></pre>
+<p>… and here’s the code for the second.</p>
+<pre class="r"><code>blockg2 &lt;- ggplot() + 
+  geom_bar(data=teamblockg2, aes(x=TEAM, weight=`TOTALBLOCKS`)) +
+  geom_bar(data=nublocks2, aes(x=TEAM, weight=`TOTALBLOCKS`, group=TEAM), color=&quot;red&quot;) +
+  geom_bar(data=osublocks2, aes(x=TEAM, weight=`TOTALBLOCKS`, group=TEAM), color=&quot;maroon&quot;) +
+  theme_bw() + 
+  labs(title = &quot;If So, You&#39;ll Probably Win.&quot;, subtitle = &quot;The Buckeyes out-blocked the Huskers by 10 in game 2.&quot;, y=&quot;&quot;, x=&quot;Team&quot;, caption = &quot;Source: NCAA | By Emma Hastings&quot;) +
+  annotate(&quot;text&quot;, x=1, y=10.7, label=&quot;10&quot;, size=4) +
+  annotate(&quot;text&quot;, x=2, y=20.7, label=&quot;20&quot;, size=4) +
+  annotate(&quot;text&quot;, x=0.65, y=21, label=&quot;OSU 3-2&quot;, size=4) +
+  scale_y_continuous(limits = c(0, 21)) +
+  theme(plot.title = element_text(size = 12, face = &quot;bold&quot;), plot.subtitle = element_text(size = 8), axis.title = element_text(size=10))</code></pre>
+<p>Finally, I’ll use “plot_grid()” again in order to compare the two games.</p>
+<pre class="r"><code>plot_grid(blockg1, blockg2, ncol=2)</code></pre>
+<p><img src="http://ehastings17.github.io/2021/03/27/explaining-the-split-how-nebraska-volleyball-lost-to-a-team-they-beat-24-hours-before/index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Based off this chart, we can truly comprehend the effect that blocking has on the outcome of a game. When one team is having a block-fest, the other team tends to suffer in their own blocking endeavors. And let’s face it… when you’re getting out-blocked by nearly 10, you’re probably losing in both the scoring and momentum departments.</p>
+<p>So, why did Nebraska beat the only undefeated team left in the Big Ten, and how did Ohio State rebound after the loss and beat one of the best teams in the nation? In every single category, the team that had the better numbers walked out of the gym with the dub. The team with the better hitting percentage won each set, and the team with the fewest errors and most blocks won the game.</p>
+<p>To put it bluntly, in order to win a game, you must simply outperformed the other team in every way possible. Nebraska did that on March 12th. Ohio State did that on March 13th.</p>
 
     </div>
   </article>
@@ -95,6 +342,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 
