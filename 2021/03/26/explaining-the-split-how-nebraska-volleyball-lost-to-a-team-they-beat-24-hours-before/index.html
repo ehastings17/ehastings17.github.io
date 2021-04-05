@@ -144,19 +144,19 @@ HPgame2 &lt;- teamgame2 %&gt;%
   geom_point(data=HPgame1, aes(x=4, y=5.7), size=2, color=&quot;maroon&quot;) +
   geom_point(data=HPgame1, aes(x=5, y=41.2), size=4, color=&quot;red&quot;) +
   geom_point(data=HPgame1, aes(x=5, y=19), size=2, color=&quot;maroon&quot;) +
-  annotate(&quot;text&quot;, x=1.35, y=22, label=&quot;NEB, 20.6%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=1.35, y=41, label=&quot;OSU, 40.0%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=2.23, y=13, label=&quot;12.8%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=2.22, y=23.9, label=&quot;22.7%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=3.23, y=25.5, label=&quot;25.6%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=3.24, y=20.5, label=&quot;20.0%&quot;, size=3.5)  +
-  annotate(&quot;text&quot;, x=4.15, y=33.5, label=&quot;35.3%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=4.2, y=5, label=&quot;5.7%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=5, y=39, label=&quot;41.2%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=5, y=21.5, label=&quot;19.0%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=1.1, y=1.5, label= &quot;NEB 3-2&quot;, size=3.5) +
+  annotate(&quot;text&quot;, x=1.18, y=24.5, label=&quot;NEB, 20.6%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.18, y=45, label=&quot;OSU, 40.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2.12, y=10, label=&quot;12.8%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2.12, y=28, label=&quot;22.7%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.105, y=32, label=&quot;25.6%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.02, y=14.7, label=&quot;20.0%&quot;, size=2)  +
+  annotate(&quot;text&quot;, x=4.15, y=32, label=&quot;35.3%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=4.1, y=3.75, label=&quot;5.7%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5, y=34.75, label=&quot;41.2%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5, y=24, label=&quot;19.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.1, y=3, label= &quot;NEB 3-2&quot;, size=2.5) +
   labs(title=&quot;Hitting percentage predicts the winner of all 10 series sets.&quot;, subtitle = &quot;During the first game, Nebraska won the hitting percentage battle in 3 out of 5 sets.&quot;, x = &quot;Set&quot;, y=&quot;Hitting Percentage (%)&quot;) +
-  scale_y_continuous(limits = c(0, 50)) +
+  scale_y_continuous(limits = c(0, 55)) +
   theme_bw() +
   theme(plot.title = element_text(size = 16, face = &quot;bold&quot;), plot.subtitle = element_text(size = 12), axis.title = element_text(size = 9))</code></pre>
 <p>… and here’s the code for the second.</p>
@@ -173,18 +173,19 @@ HPgame2 &lt;- teamgame2 %&gt;%
   geom_point(data=HPgame2, aes(x=4, y=20), size=4, color=&quot;maroon&quot;) +
   geom_point(data=HPgame2, aes(x=5, y=31.8), size=2, color=&quot;red&quot;) +
   geom_point(data=HPgame2, aes(x=5, y=47.5), size=4, color=&quot;maroon&quot;) +
-  annotate(&quot;text&quot;, x=1.18, y=28.3, label=&quot;NEB, 25.8%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=1.35, y=48, label=&quot;OSU, 48.3%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=1.95, y=22.9, label=&quot;18.9%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=2.23, y=10, label=&quot;10.0%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=3.2, y=41.5, label=&quot;39.5%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=3.09, y=26, label=&quot;29.4%&quot;, size=3.5)  +
-  annotate(&quot;text&quot;, x=4.225, y=8.5, label=&quot;8.3%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=3.95, y=24.1, label=&quot;20.0%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=5.1, y=28.5, label=&quot;31.8%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=5.1, y=45, label=&quot;47.6%&quot;, size=3.5) +
-  annotate(&quot;text&quot;, x=1.1, y=1.5, label= &quot;OSU 3-2&quot;, size=3.5) +
+  annotate(&quot;text&quot;, x=1.2, y=28.3, label=&quot;NEB, 25.8%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.255, y=49, label=&quot;OSU, 48.3%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.95, y=25, label=&quot;18.9%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2.12, y=7, label=&quot;10.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.13, y=44, label=&quot;39.5%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.09, y=24.3, label=&quot;29.4%&quot;, size=2)  +
+  annotate(&quot;text&quot;, x=4.12, y=6, label=&quot;8.3%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=3.95, y=26, label=&quot;20.0%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5, y=27, label=&quot;31.8%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=5, y=41, label=&quot;47.6%&quot;, size=2) +
+  annotate(&quot;text&quot;, x=1.1, y=3, label= &quot;OSU 3-2&quot;, size=2) +
   labs(subtitle=&quot;The same thing happens in Game 2, except it&#39;s the Buckeyes&#39; turn.&quot;, x=&quot;Set&quot;, y=&quot;Hitting Percentage (%)&quot;, caption=&quot;Source: NCAA | By Emma Hastings&quot;) +
+  scale_y_continuous(limits = c(0, 55)) +
   theme_bw() +
   theme(plot.title = element_text(size = 16, face = &quot;bold&quot;), plot.subtitle = element_text(size = 12), axis.title = element_text(size = 9))</code></pre>
 <p>Finally, I’m going to use “plot_grid()” to put the line charts together. This way, we’ll be able to compare Game 1’s hitting percentages with Game 2’s.</p>
@@ -278,16 +279,16 @@ teamblockg2 &lt;- indivblockg2 %&gt;%
   summarise(TOTALBLOCKS = sum(BLOCKS))</code></pre>
 <p>Next, I’m going to separate each game out into Nebraska and Ohio State so I can compare their blocking totals later.</p>
 <pre class="r"><code>nublocks1 &lt;- teamblockg1 %&gt;% 
-  filter(TEAM == &quot;NEBRASKA CORNHUSKERS&quot;)
+  filter(TEAM == &quot;Nebraska&quot;)
 
 nublocks2 &lt;- teamblockg2 %&gt;% 
-  filter(TEAM == &quot;NEBRASKA CORNHUSKERS&quot;)
+  filter(TEAM == &quot;Nebraska&quot;)
 
 osublocks1 &lt;- teamblockg1 %&gt;% 
-  filter(TEAM == &quot;OHIO STATE BUCKEYES&quot;)
+  filter(TEAM == &quot;Ohio State&quot;)
 
 osublocks2 &lt;- teamblockg2 %&gt;% 
-  filter(TEAM == &quot;OHIO STATE BUCKEYES&quot;)</code></pre>
+  filter(TEAM == &quot;Ohio State&quot;)</code></pre>
 <p>Then, I’m going to create two separate bar charts displaying each team’s blocking totals for each game.</p>
 <p>Here’s the code for the first bar chart…</p>
 <pre class="r"><code>blockg1 &lt;- ggplot() + 
@@ -297,10 +298,10 @@ osublocks2 &lt;- teamblockg2 %&gt;%
   theme_bw() + 
   labs(title = &quot;Can You Block Your Opponent?&quot;, subtitle = &quot;Nebraska out-blocked Ohio State by 9 in game 1.&quot;, y=&quot;Blocks&quot;, x=&quot;Team&quot;, caption = &quot;&quot;) +
   scale_y_continuous(limits = c(0, 21)) +
-  annotate(&quot;text&quot;, x=1, y=17.5, label=&quot;17&quot;, size=4) +
-  annotate(&quot;text&quot;, x=2, y=8.5, label=&quot;8&quot;, size=4) +
+  annotate(&quot;text&quot;, x=1, y=17.7, label=&quot;17&quot;, size=4) +
+  annotate(&quot;text&quot;, x=2, y=8.7, label=&quot;8&quot;, size=4) +
   annotate(&quot;text&quot;, x=0.65, y=21, label=&quot;NEB 3-2&quot;, size=4) +
-  theme(plot.title = element_text(size = 12, face = &quot;bold&quot;), plot.subtitle = element_text(size = 9), axis.title = element_text(size=10))</code></pre>
+  theme(plot.title = element_text(size = 12, face = &quot;bold&quot;), plot.subtitle = element_text(size = 8), axis.title = element_text(size=10))</code></pre>
 <p>… and here’s the code for the second.</p>
 <pre class="r"><code>blockg2 &lt;- ggplot() + 
   geom_bar(data=teamblockg2, aes(x=TEAM, weight=`TOTALBLOCKS`)) +
@@ -308,11 +309,11 @@ osublocks2 &lt;- teamblockg2 %&gt;%
   geom_bar(data=osublocks2, aes(x=TEAM, weight=`TOTALBLOCKS`, group=TEAM), color=&quot;maroon&quot;) +
   theme_bw() + 
   labs(title = &quot;If So, You&#39;ll Probably Win.&quot;, subtitle = &quot;The Buckeyes out-blocked the Huskers by 10 in game 2.&quot;, y=&quot;&quot;, x=&quot;Team&quot;, caption = &quot;Source: NCAA | By Emma Hastings&quot;) +
-  annotate(&quot;text&quot;, x=1, y=10.5, label=&quot;10&quot;, size=4) +
-  annotate(&quot;text&quot;, x=2, y=20.5, label=&quot;20&quot;, size=4) +
+  annotate(&quot;text&quot;, x=1, y=10.7, label=&quot;10&quot;, size=4) +
+  annotate(&quot;text&quot;, x=2, y=20.7, label=&quot;20&quot;, size=4) +
   annotate(&quot;text&quot;, x=0.65, y=21, label=&quot;OSU 3-2&quot;, size=4) +
   scale_y_continuous(limits = c(0, 21)) +
-  theme(plot.title = element_text(size = 12, face = &quot;bold&quot;), plot.subtitle = element_text(size = 9), axis.title = element_text(size=10))</code></pre>
+  theme(plot.title = element_text(size = 12, face = &quot;bold&quot;), plot.subtitle = element_text(size = 8), axis.title = element_text(size=10))</code></pre>
 <p>Finally, I’ll use “plot_grid()” again in order to compare the two games.</p>
 <pre class="r"><code>plot_grid(blockg1, blockg2, ncol=2)</code></pre>
 <p><img src="http://ehastings17.github.io/2021/03/26/explaining-the-split-how-nebraska-volleyball-lost-to-a-team-they-beat-24-hours-before/index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
