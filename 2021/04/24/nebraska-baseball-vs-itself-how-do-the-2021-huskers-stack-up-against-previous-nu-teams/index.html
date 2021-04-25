@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.81.0" />
+
+
+<title>Nebraska Baseball vs. Itself: How do the 2021 Huskers Stack Up Against Previous NU Teams? - Emma Hastings&#39;s RStudio Blog</title>
+<meta property="og:title" content="Nebraska Baseball vs. Itself: How do the 2021 Huskers Stack Up Against Previous NU Teams? - Emma Hastings&#39;s RStudio Blog">
+
+
+  <link href='http://ehastings17.github.io/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/ehastings17">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/emmahastingss_">Twitter</a></li>
+    
+    <li><a href="https://emmaehastings.weebly.com/">Weebly</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">8 min read</span>
+    
+
+    <h1 class="article-title">Nebraska Baseball vs. Itself: How do the 2021 Huskers Stack Up Against Previous NU Teams?</h1>
+
+    
+    <span class="article-date">2021-04-24</span>
+    
+
+    <div class="article-content">
+      
+<script src="http://ehastings17.github.io/2021/04/24/nebraska-baseball-vs-itself-how-do-the-2021-huskers-stack-up-against-previous-nu-teams/index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>It’s common knowledge that Nebraska is a volleyball school. However, could baseball soon be added to that list, as well? It’s looking like the Husker baseball team could make a run for that title this year, as they currently sit at #1 in the Big Ten standings with a record of 18-6.</p>
+<p>Right now, there are a lot of questions on Husker fans’ minds. Will Nebraska come away with the 2021 Conference title? Could they make a run in the 2021 NCAA tournament? What about a return to the College World Series after 16 years?</p>
+<p>Looking back in history, Nebraska has made the NCAA tournament 12 times in the 21st century and has received a berth to the CWS in the 2001, 2002 and 2005 seasons. So, how do the 2021 Huskers stack up against all the Nebraska teams from this century? Let’s check it out.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.0.5     ✓ dplyr   1.0.3
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(ggalt)</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;ggalt&#39;:
+##   method                  from   
+##   grid.draw.absoluteGrob  ggplot2
+##   grobHeight.absoluteGrob ggplot2
+##   grobWidth.absoluteGrob  ggplot2
+##   grobX.absoluteGrob      ggplot2
+##   grobY.absoluteGrob      ggplot2</code></pre>
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
+<pre class="r"><code>library(formattable)</code></pre>
+<p>I took my data from <a href="https://huskers.com/sports/2019/7/22/nebraska-baseball-stats.aspx?path=baseball">Huskers.com</a> and separated it into two data sets: one for batting and one for pitching. I also had to clean it up a little.</p>
+<pre class="r"><code>battingdata &lt;- read.csv(&quot;BattingData.csv&quot;)
+pitchingdata &lt;- read.csv(&quot;PitchingData.csv&quot;)</code></pre>
+<pre class="r"><code>battingdata &lt;- battingdata %&gt;% select(-X, -X.1, -X.2, -X.3, -X.4, -X.5, -X.6, -X.7, -X.8, -X.9, -X.10, -X.11, -X.12, -X.13, -X.14, -X.15, -X.16, -X.17, -X.18, -X.19, -X.20, -X.21, -X.22, -X.23, -X.24) %&gt;% rename(SLGPCT = 10) %&gt;% rename(OBPCT = 15) %&gt;% rename(FLDPCT = 20)</code></pre>
+<pre class="r"><code>pitchingdata &lt;- pitchingdata %&gt;% rename(&quot;DBL&quot; = 13) %&gt;% rename(&quot;TRIP&quot; = 14)</code></pre>
+<p>First, I want to examine Nebraska’s offenses. After all, you can’t win games without crossing home plate more than your opponent. However, although the overall number of runs is important, what’s more important is how many runs you can get across home plate with one swing of the bat. This statistic is known as RBIs, or runs batted in. The higher your RBI total, the more runs your batters are getting to the plate in a single at bat, which can drastically increase your lethality and your ability to win games.</p>
+<p>I want to look at how Nebraska’s RBI total compares to the same statistic from the past 20 years. I’m not going to worry about the opponents right now, so I dropped them from the data set for this comparison</p>
+<pre class="r"><code>nuhitting &lt;- battingdata %&gt;%
+  filter(TEAM==&quot;NEB&quot;) %&gt;%
+  group_by(YEAR)</code></pre>
+<p>In a normal season, baseball teams play upwards of 50 games. However, as we are all painfully aware, this is not a normal season. In addition to only being halfway through the season so far, Nebraska didn’t play non-conference games this year, either. So, in order to make comparison fair across multiple seasons, I’ve decided to calculate the number of RBIs each team had per game. This will make up for the lack of non-conference games and for the point we are at in the season.</p>
+<pre class="r"><code>toprbi &lt;- nuhitting %&gt;%
+  mutate(TotalGames = (NEBWINS + OPPWINS)) %&gt;%
+  mutate(rbiPG = (RBI/TotalGames))</code></pre>
+<p>So how do the 2021 Huskers compare to the past 20 Nebraska teams, especially with the 3 CWS qualifiers? Check it out.</p>
+<pre class="r"><code>ggplot() + 
+  geom_lollipop(
+    data=toprbi, 
+    aes(y=YEAR, x=rbiPG), 
+    horizontal = TRUE) +
+  geom_point(data=toprbi, aes(x=6.75, y=2021), size=1.5, color=&quot;#E41C38&quot;) +
+  geom_point(data=toprbi, aes(x=7.220588, y=2002), size=1.5, color=&quot;darkgoldenrod1&quot;) +
+  geom_point(data=toprbi, aes(x=5.916667, y=2005), size=1.5, color=&quot;darkgoldenrod1&quot;) +
+  geom_point(data=toprbi, aes(x=8.287879, y=2001), size=1.5, color=&quot;darkgoldenrod1&quot;) +
+  theme_bw() +
+  annotate(&quot;text&quot;, x=7.15, y=2021, label=&quot;2021&quot;, size=2.5) +
+  annotate(&quot;text&quot;, x=6.35, y=2005, label=&quot;CWS&quot;, size=2.5) +
+  annotate(&quot;text&quot;, x=7.6, y=2002, label=&quot;CWS&quot;, size=2.5) +
+  annotate(&quot;text&quot;, x=8.7, y=2001, label=&quot;CWS&quot;, size=2.5) +
+  labs(title = &quot;2021 Huskers Plate Most RBIs per Game Since 2003&quot;, subtitle = &quot;This year&#39;s team has more RBIs per game than the 2005 CWS-qualifying team.&quot;, x = &quot;Runs Batted In (RBI) per Game&quot;, y = &quot;Year&quot;, caption = &quot;Source: Huskers.com | By Emma Hastings&quot;) +
+  theme(plot.title = element_text(size = 16, face = &quot;bold&quot;), plot.subtitle = element_text(size = 11), axis.title = element_text(size=10))</code></pre>
+<p><img src="http://ehastings17.github.io/2021/04/24/nebraska-baseball-vs-itself-how-do-the-2021-huskers-stack-up-against-previous-nu-teams/index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>As you can see, Nebraska has more RBIs per game than the 2005 CWS team by nearly one run. Although it doesn’t sound like much, it actually is. According to the <a href="http://fs.ncaa.org/Docs/stats/baseball_RB/reports/TrendsYBY.pdf">NCAA</a>, the average amount of runs scored per game in 2018 was 5.64. One run, in fact, can make all the difference.</p>
+<p>With the 2021 Huskers averaging 6.75 RBIs per game, it’s safe to say that any opponent should be worried on defense. This is also the most RBIs per game that Nebraska has averaged since 2003. I’d say the Huskers stack up pretty well against themselves in that category.</p>
+<p>However, defensive prowess is just as important as earning runs. If you can’t keep the other team from circling the field, there’s not much chance of getting a W. Every play starts with a pitch, so let’s look at Nebraska’s ERA versus their opponents’. This will not only tell us about the Huskers’ ability to keep teams from getting home, but will also show how much Nebraska exploits other teams’ pitching for their own benefit.</p>
+<pre class="r"><code>nupitching &lt;- pitchingdata %&gt;% filter(TEAM==&quot;NEB&quot;)
+opppitching &lt;- pitchingdata %&gt;% filter(TEAM==&quot;OPP&quot;)</code></pre>
+<pre class="r"><code>ggplot() +
+  geom_line(data=nupitching, aes(x=YEAR, y=ERA), color=&quot;#E41C38&quot;) +
+  geom_line(data=opppitching, aes(x=YEAR, y=ERA), color=&quot;grey&quot;) +
+  labs(title = &quot;2021 Huskers&#39; ERA Drops, While Their Opponents&#39; ERA Increases&quot;, subtitle = &quot;Nebraska has decreased their ERA by 2 runs so far from 2020 to 2021.&quot;, caption = &quot;Source: Huskers.com | By Emma Hastings&quot;, x=&quot;Year&quot;, y = &quot;Earned Run Average (ERA)&quot;) +
+  theme_bw() +
+  geom_point(data=nupitching, aes(x=2001, y=4.41), size=1.5, color=&quot;goldenrod1&quot;) +
+  geom_point(data=nupitching, aes(x=2002, y=3.66), size=1.5, color=&quot;goldenrod1&quot;) +
+  geom_point(data=nupitching, aes(x=2005, y=2.69), size=1.5, color=&quot;goldenrod1&quot;) +
+  geom_point(data=nupitching, aes(x=2021, y=3.94), size=1.5, color=&quot;#E41C38&quot;) +
+  annotate(&quot;text&quot;, x=2002.75, y=4.2, label=&quot;Nebraska&quot;, size=3.5) +
+  annotate(&quot;text&quot;, x=2003.05, y=7.5, label=&quot;Opponents&quot;, size=3.5) +
+  annotate(&quot;text&quot;, x=2005.65, y=2.69, label=&quot;CWS&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2002, y=3.45, label=&quot;CWS&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2001, y=4.6, label=&quot;CWS&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2021, y=3.75, label=&quot;2021&quot;, size=2) +
+  theme(plot.title = element_text(size = 14, face = &quot;bold&quot;), plot.subtitle = element_text(size = 11), axis.title = element_text(size=10))</code></pre>
+<p><img src="http://ehastings17.github.io/2021/04/24/nebraska-baseball-vs-itself-how-do-the-2021-huskers-stack-up-against-previous-nu-teams/index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>According to this line chart, it is clear to see that the Huskers are giving their opponents trouble with its sub-4 ERA. AKA, for every nine-innings, Nebraska only gives up 3.94 runs, while their opponents give them 6.45. Basically, Nebraska beats up on their opponents from the batter’s box and the pitcher’s mound.</p>
+<p>Nebraska’s ERA out-performs the 2001 CWS-qualifying team and competes with the 2002 team, as well, although the Huskers could most definitely improve this statistic to become even more competitive with past Nebraska teams.</p>
+<p>Lastly, I want to look at the Huskers’ ability to wrack up multiple bases in one at bat. This is achieved by what are called “extra-base hits,” meaning that the batter gets more than a single on a hit. For the same reason I divided RBIs by the number of games, I’m going to do the same thing with extra-base hits. I calculated the number of extra base hits by adding up the number of doubles, triples, and home runs that Nebraska has wracked up this year.</p>
+<pre class="r"><code>nuextrabasehits &lt;- nuhitting %&gt;% mutate(extrabasehits = sum(DBL + TRIP + HR)) %&gt;%
+  mutate(TotalGames = (NEBWINS + OPPWINS))</code></pre>
+<pre class="r"><code>nuEBpg &lt;- nuextrabasehits %&gt;% mutate(ebhpg = (extrabasehits/TotalGames))</code></pre>
+<pre class="r"><code>ggplot() + geom_bar(data=nuEBpg, aes(x=YEAR, weight=ebhpg), fill = &quot;#E41C38&quot;) +
+  labs(title=&quot;2021 Huskers Tally At Least 3 Extra-Base Hits per Game&quot;, subtitle = &quot;After 24 games, Nebraska boasts 39 doubles, 4 triples, and a whopping 32 homeruns.&quot;, caption = &quot;Source: Huskers.com | By Emma Hastings&quot;, x = &quot;Year&quot;, y = &quot;Extra-Base Hits per Game&quot;) +
+  annotate(&quot;text&quot;, x=2001, y=3.7, label=&quot;CWS&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2002, y=3.735, label=&quot;CWS&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2005, y=3.02, label=&quot;CWS&quot;, size=2) +
+  annotate(&quot;text&quot;, x=2021, y=3.23, label=&quot;2021&quot;, size=2) +
+  theme_bw() +
+  theme(plot.title = element_text(size = 15, face = &quot;bold&quot;), plot.subtitle = element_text(size = 10), axis.title = element_text(size=9.5))</code></pre>
+<p><img src="http://ehastings17.github.io/2021/04/24/nebraska-baseball-vs-itself-how-do-the-2021-huskers-stack-up-against-previous-nu-teams/index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>This chart shows us that this year’s Nebraska team is a powerhouse at the plate. Per game, the Huskers are hitting over 3 extra-base hits, which is getting them in scoring position a significant amount more than a single would. Combining this statistic with what we already know about the team’s RBIs, this makes Nebraska even more likely to post more runs on the board, thereby making them even more dangerous for their opponents. The team is also out-performing the 2005 CWS-qualifying team.</p>
+<p>After examining these three statistics, I would say that the Huskers are well on their way to a successful season with very real post-season prospects. Although they aren’t consistently out-performing other CWS-qualifying teams quite yet, Nebraska is competing with them and showing that they deserve a shot at the Big Ten crown. Whether they use RBIs, phenomenal pitching, extra-base hits, or other methods, they almost always figure out a way to win.</p>
+<p>In conclusion, I predict that the 2021 Nebraska baseball team will make another appearance in the 2021 NCAA Tournament, and with continued success, could make a deep run or even return to the College World Series. However, in order to do so, the Huskers must not only continue their dominant winning ways, but they must improve on them, as well.</p>
+<p>After all, there’s still a lot of baseball to be played.</p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+
